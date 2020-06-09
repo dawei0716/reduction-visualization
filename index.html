@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Reduction Visualizations</title>
+    <style>
+      input {
+        width: 50px;
+        height: 40px;
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 style="text-align: center;">3-SAT TO SUBSET SUM</h2>
+    <datalist id="x">
+      <option value="x"> </option>
+      <option value="~x"> </option>
+    </datalist>
+    <datalist id="y">
+      <option value="y"> </option>
+      <option value="~y"> </option>
+    </datalist>
+    <datalist id="z">
+      <option value="z"> </option>
+      <option value="~z"> </option>
+    </datalist>
+
+    <div style="font-size: 30px;">
+      ( <input name="x" list="x" placeholder="x1" /> ∨
+      <input name="y" list="y" placeholder="y1" /> ∨
+      <input name="z" list="z" placeholder="z1" /> ) ∧ (
+      <input name="x" list="x" placeholder="x2" /> ∨
+      <input name="y" list="y" placeholder="y2" /> ∨
+      <input name="z" list="z" placeholder="z2" /> ) ∧ (
+      <input name="x" list="x" placeholder="x3" /> ∨
+      <input name="y" list="y" placeholder="y3" /> ∨
+      <input name="z" list="z" placeholder="z3" /> )
+    </div>
+
+    <br />
+    <br />
+
+    <button id="submit">REDUCE!</button>
+
+    <div id="container"></div>
+
+    <script type="text/javascript">
+      document.getElementById("submit").onclick = function () {
+        var x_vals = document.getElementsByName("x");
+        x_vals = Array.from(x_vals);
+        var y_vals = document.getElementsByName("y");
+        y_vals = Array.from(y_vals);
+        var z_vals = document.getElementsByName("z");
+        z_vals = Array.from(z_vals);
+
+        var variables = 3;
+        var clauses = 3;
+
+        var rows = 2 * variables + 2 * clauses + 1;
+        var columns = 6;
+
+        var output =
+          '<table border="2" cellspacing="0" cellpadding="15" class="table">';
+
+        function createTable() {
+          for (var i = 0; i <= rows; i++) {
+            output = output + "<tr>";
+            for (var j = 0; j <= columns; j++) {
+              //row 0
+              if (i == 0 && j != 0 && j < 4) {
+                output = output + "<td>" + "x" + j + "</td>";
+              } //row 0 Clause
+              else if (i == 0 && j != 0 && j >= 4) {
+                output = output + "<td>" + "C" + (j - 3) + "</td>";
+              } //col one
+              else if (j == 0 && i != 0 && i < 7) {
+                if (i % 2 == 1) {
+                  var val = Math.floor(i / 2);
+                  output = output + "<td>" + "k" + (i - val) + " =" + "</td>";
+                } else {
+                  var val = i / 2;
+                  output = output + "<td>" + "k'" + (i - val) + " =" + "</td>";
+                }
+              } else if (j == 0 && i != 0 && i >= 7 && i < 13) {
+                if (i % 2 == 1) {
+                  var val = Math.floor(i / 2);
+                  output =
+                    output + "<td>" + "C" + (i - val - 3) + " =" + "</td>";
+                } else {
+                  var val = i / 2;
+                  output =
+                    output + "<td>" + "C'" + (i - val - 3) + " =" + "</td>";
+                }
+              } else if (j > 0 && j < 4 && i != 0 && i < 7) {
+                if (i % 2 == 1) {
+                  var val = Math.floor(i / 2);
+                  if (i - val == j) {
+                    output = output + "<td>" + 1 + "</td>";
+                  } else {
+                    output = output + "<td>" + 0 + "</td>";
+                  }
+                } else {
+                  var val = i / 2;
+                  if (i - val == j) {
+                    output = output + "<td>" + 1 + "</td>";
+                  } else {
+                    output = output + "<td>" + 0 + "</td>";
+                  }
+                }
+              } else if (j >= 4 && i != 0 && i >= 7 && i < 13) {
+                if (i % 2 == 1) {
+                  var val = Math.floor(i / 2);
+                  if (i - val == j) {
+                    output = output + "<td>" + 1 + "</td>";
+                  } else {
+                    output = output + "<td>" + 0 + "</td>";
+                  }
+                } else {
+                  var val = i / 2;
+                  if (i - val == j) {
+                    output = output + "<td>" + 2 + "</td>";
+                  } else {
+                    output = output + "<td>" + 0 + "</td>";
+                  }
+                }
+              } else if (j >= 4 && i != 0 && i < 7) {
+                if (i % 2 == 1) {
+                  var val = Math.floor(i / 2);
+                  console.log(i - val);
+                  var x = x_vals[i - val - 1].value;
+                  var y = y_vals[i - val - 1].value;
+                  var z = z_vals[i - val - 1].value;
+                  if (j == 4) {
+                    if (x == "x") {
+                      output = output + "<td>" + 1 + "</td>";
+                    } else {
+                      output = output + "<td>" + 0 + "</td>";
+                    }
+                  }
+                  if (j == 5) {
+                    if (y == "y") {
+                      output = output + "<td>" + 1 + "</td>";
+                    } else {
+                      output = output + "<td>" + 0 + "</td>";
+                    }
+                  }
+                  if (j == 6) {
+                    if (z == "z") {
+                      output = output + "<td>" + 1 + "</td>";
+                    } else {
+                      output = output + "<td>" + 0 + "</td>";
+                    }
+                  }
+                } else {
+                  var val = i / 2;
+                  console.log(i - val);
+                  var x = x_vals[i - val - 1].value;
+                  var y = y_vals[i - val - 1].value;
+                  var z = z_vals[i - val - 1].value;
+                  if (j == 4) {
+                    if (x == "x") {
+                      output = output + "<td>" + 0 + "</td>";
+                    } else {
+                      output = output + "<td>" + 1 + "</td>";
+                    }
+                  }
+                  if (j == 5) {
+                    if (y == "y") {
+                      output = output + "<td>" + 0 + "</td>";
+                    } else {
+                      output = output + "<td>" + 1 + "</td>";
+                    }
+                  }
+                  if (j == 6) {
+                    if (z == "z") {
+                      output = output + "<td>" + 0 + "</td>";
+                    } else {
+                      output = output + "<td>" + 1 + "</td>";
+                    }
+                  }
+                }
+              } else if (i == 13 && j == 0) {
+                output = output + "<td>" + "target =" + "</td>";
+              } else if (i == 13) {
+                if (j < 4) output = output + "<td>" + "1" + "</td>";
+                else {
+                  output = output + "<td>" + "4" + "</td>";
+                }
+              } else if (i == 0 && j == 0) {
+                output = output + "<td>" + "</td>";
+              } else {
+                output = output + "<td>" + "0" + "</td>";
+              }
+            }
+            output = output + "</tr>";
+          }
+          output = output + "</table>";
+          document.getElementById("container").innerHTML = output;
+        }
+
+        createTable(rows, columns);
+      };
+    </script>
+  </body>
+</html>
